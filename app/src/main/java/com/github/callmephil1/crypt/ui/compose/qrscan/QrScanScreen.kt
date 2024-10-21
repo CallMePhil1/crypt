@@ -13,6 +13,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -37,6 +38,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.github.callmephil1.crypt.ui.compose.CryptScaffold
 import java.util.concurrent.Executors
 
 @Composable
@@ -103,7 +105,6 @@ fun CameraPreview(
 
 @Composable
 fun QrScanScreen(
-    modifier: Modifier = Modifier,
     viewModel: QrScanViewModel,
     onDismissClicked: () -> Unit = {},
     onNavToNewEntry: () -> Unit = {}
@@ -117,33 +118,35 @@ fun QrScanScreen(
         }
     }
 
-    Box(modifier = modifier) {
-        CameraPreview(
-            processImage = viewModel::processBarcode,
-            modifier = Modifier.fillMaxHeight()
-        )
-
-        TextButton(
-            onClick = {
-                viewModel.onDismissClicked()
-                onDismissClicked()
-            },
-            border = BorderStroke(2.dp, MaterialTheme.colorScheme.primaryContainer),
-            colors = ButtonDefaults.textButtonColors(
-                containerColor = MaterialTheme.colorScheme.secondaryContainer
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 16.dp)
-                .height(60.dp)
-                .align(Alignment.BottomCenter)
-        ) {
-            Text(
-                text = "Dismiss",
-                fontSize = 24.sp,
-                color = contentColorFor(MaterialTheme.colorScheme.secondaryContainer)
+    CryptScaffold {
+        Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+            CameraPreview(
+                processImage = viewModel::processBarcode,
+                modifier = Modifier.fillMaxHeight()
             )
+
+            TextButton(
+                onClick = {
+                    viewModel.onDismissClicked()
+                    onDismissClicked()
+                },
+                border = BorderStroke(2.dp, MaterialTheme.colorScheme.primaryContainer),
+                colors = ButtonDefaults.textButtonColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 16.dp)
+                    .height(60.dp)
+                    .align(Alignment.BottomCenter)
+            ) {
+                Text(
+                    text = "Dismiss",
+                    fontSize = 24.sp,
+                    color = contentColorFor(MaterialTheme.colorScheme.secondaryContainer)
+                )
+            }
         }
     }
 }

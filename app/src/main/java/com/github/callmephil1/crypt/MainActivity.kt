@@ -43,26 +43,16 @@ import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         System.loadLibrary("sqlcipher")
-
-//        val databaseFile = getDatabasePath(BuildConfig.DATABASE_FILE)
-//        SQLiteDatabase.openOrCreateDatabase(
-//            databaseFile,
-//            "test",
-//            null,
-//            null
-//        )
 
         enableEdgeToEdge()
         setContent {
             KoinApplication(appModule(this@MainActivity.applicationContext)) {
                 val context = LocalContext.current
                 val navController = rememberNavController()
-                val snackbarManager = koinInject<SnackbarManager>()
                 val toastManager = koinInject<ToastManager>()
                 val toastMessage by toastManager.messages.collectAsState()
 
@@ -71,67 +61,44 @@ class MainActivity : ComponentActivity() {
                         Toast.makeText(context, toastMessage.message, Toast.LENGTH_SHORT).show()
                 }
 
-                CryptTheme {
-                    Scaffold(
-                        topBar = {
-                            TopAppBar(
-                                title = { Text("Crypt", modifier = Modifier.padding(horizontal = 16.dp)) },
-                                actions = {
-                                    Icon(
-                                        Icons.Filled.MoreVert,
-                                        "",
-                                        modifier = Modifier.padding(horizontal = 8.dp)
-                                    )
-                                }
-                            )
-                        },
-                        snackbarHost = { SnackbarHost(hostState = snackbarManager.snackbarHostState) },
-                        modifier = Modifier.fillMaxSize()
+                NavHost(
+                    navController = navController,
+                    startDestination = Routes.AUTHENTICATE
+                ) {
+                    composable(Routes.AUTHENTICATE) {
+                        LoginScreen(
+                            viewModel = koinViewModel(),
+                            onNavToEntries = navController::navigateToEntries
+                        )
+                    }
 
-                    ) { innerPadding ->
-                        NavHost(
-                            navController = navController,
-                            startDestination = Routes.AUTHENTICATE,
-                            modifier = Modifier.padding(innerPadding).padding(12.dp)
-                        ) {
-                            composable(Routes.AUTHENTICATE) {
-                                LoginScreen(
-                                    viewModel = koinViewModel(),
-                                    onNavToEntries = navController::navigateToEntries
-                                )
-                            }
+                    composable(Routes.ENTRIES) {
+                        EntriesScreen(
+                            viewModel = koinViewModel(),
+                            onNavToEntryDetails = navController::navigateToEntryDetail,
+                        )
+                    }
 
-                            composable(Routes.ENTRIES) {
-                                EntriesScreen(
-                                    viewModel = koinViewModel(),
-                                    onNavToEntryDetails = navController::navigateToEntryDetail,
-                                    modifier = Modifier.fillMaxSize()
-                                )
-                            }
+                    composable(
+                        Routes.ENTRY_DETAIL,
+                        listOf(navArgument("id") {
+                            this.type = NavType.IntType
+                            this.defaultValue = 0
+                        })
+                    ) {
+                        EntryDetailsScreen(
+                            viewModel = koinViewModel(),
+                            onNavToEntries = { navController.navigateToEntries() },
+                            onQrCodeButtonClicked = { navController.navigateToQRScanner() },
+                        )
+                    }
 
-                            composable(
-                                Routes.ENTRY_DETAIL,
-                                listOf(navArgument("id") {
-                                    this.type = NavType.IntType
-                                    this.defaultValue = 0
-                                })
-                            ) {
-                                EntryDetailsScreen(
-                                    viewModel = koinViewModel(),
-                                    onNavToEntries = { navController.navigateToEntries() },
-                                    onQrCodeButtonClicked = { navController.navigateToQRScanner() },
-                                    modifier = Modifier.fillMaxSize()
-                                )
-                            }
-
-                            composable(Routes.QR_SCANNER) {
-                                QrScanScreen(
-                                    viewModel = koinViewModel(),
-                                    onDismissClicked = { navController.popBackStack() },
-                                    onNavToNewEntry = { navController.popBackStack() }
-                                )
-                            }
-                        }
+                    composable(Routes.QR_SCANNER) {
+                        QrScanScreen(
+                            viewModel = koinViewModel(),
+                            onDismissClicked = { navController.popBackStack() },
+                            onNavToNewEntry = { navController.popBackStack() }
+                        )
                     }
                 }
             }

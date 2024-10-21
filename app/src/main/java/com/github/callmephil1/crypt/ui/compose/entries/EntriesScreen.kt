@@ -1,6 +1,7 @@
 package com.github.callmephil1.crypt.ui.compose.entries
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -23,6 +24,7 @@ import com.github.callmephil1.crypt.data.CryptDatabase
 import com.github.callmephil1.crypt.data.EntryDetailsManager
 import com.github.callmephil1.crypt.data.clipboard.NoopClipboard
 import com.github.callmephil1.crypt.di.appModule
+import com.github.callmephil1.crypt.ui.compose.CryptScaffold
 import com.github.callmephil1.crypt.ui.compose.EntryList
 import com.github.callmephil1.crypt.ui.snackbar.SnackbarManagerImpl
 import com.github.callmephil1.crypt.ui.toast.ToastManagerImpl
@@ -33,43 +35,44 @@ import org.koin.core.qualifier.named
 
 @Composable
 fun EntriesScreen(
-    modifier: Modifier = Modifier,
     viewModel: EntriesScreenViewModel,
     onNavToEntryDetails: (Int) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val scope = rememberCoroutineScope()
 
-    Box(
-        modifier = modifier
-    ) {
-        EntryList(
-            uiState.entries,
-            onEditButtonClicked = {
-                scope.launch {
-                    viewModel.entryDetailsManager.loadEntry(it)
-                    onNavToEntryDetails(it)
-                }
-            },
-            viewModel::onOtpClicked,
-            viewModel::onOtpLongClicked,
-            viewModel::onSecretClicked,
-            viewModel::onSecretLongClicked
-        )
-
-        FloatingActionButton(
-            onClick = { onNavToEntryDetails(0) },
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(36.dp)
-                .size(dimensionResource(R.dimen.action_button_size))
+    CryptScaffold { innerPadding ->
+        Box(
+            modifier = Modifier.fillMaxSize().padding(innerPadding).padding(16.dp)
         ) {
-            Icon(
-                Icons.Filled.Add,
-                ""
+            EntryList(
+                uiState.entries,
+                onEditButtonClicked = {
+                    scope.launch {
+                        viewModel.entryDetailsManager.loadEntry(it)
+                        onNavToEntryDetails(it)
+                    }
+                },
+                viewModel::onOtpClicked,
+                viewModel::onOtpLongClicked,
+                viewModel::onSecretClicked,
+                viewModel::onSecretLongClicked
             )
+
+            FloatingActionButton(
+                onClick = { onNavToEntryDetails(0) },
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(36.dp)
+                    .size(dimensionResource(R.dimen.action_button_size))
+            ) {
+                Icon(
+                    Icons.Filled.Add,
+                    ""
+                )
+            }
         }
     }
 }
