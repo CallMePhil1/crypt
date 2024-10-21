@@ -128,7 +128,10 @@ fun QrScanScreen(
                 viewModel.onDismissClicked()
                 onDismissClicked()
             },
-            border = BorderStroke(2.dp, MaterialTheme.colorScheme.secondaryContainer),
+            border = BorderStroke(2.dp, MaterialTheme.colorScheme.primaryContainer),
+            colors = ButtonDefaults.textButtonColors(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer
+            ),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
@@ -139,7 +142,7 @@ fun QrScanScreen(
             Text(
                 text = "Dismiss",
                 fontSize = 24.sp,
-                color = MaterialTheme.colorScheme.primaryContainer
+                color = contentColorFor(MaterialTheme.colorScheme.secondaryContainer)
             )
         }
     }

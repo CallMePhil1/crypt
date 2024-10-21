@@ -44,13 +44,13 @@ private val atomicBlueberry = lightColorScheme(
     surface = Chambray,
     background = Color(0xFFE2ECFF),
     onBackground = Color(0xFFEF9A9A),
-    onSurface = Color.Black
 )
 
 private val savanna = lightColorScheme(
     background = Color(0xFFD9E1EA),
     primaryContainer = Color(0xFFED8D8D),
-    secondaryContainer = Color(0xFFEAACAC),
+    onPrimaryContainer = Color(0xFF393232),
+    secondaryContainer = Color(0xFFEEDCDC),
     surface = Color(0xFFCFB997),
     surfaceContainer = Color(0xFFE8E6E6),
     onSurface = Color(0xFF393232),
@@ -61,11 +61,12 @@ private val avocado = lightColorScheme(
     background = Color(0xFFFFFBF1),
     primaryContainer = Color(0xff685369),
     onPrimaryContainer = Color(0xfff0f0f0),
-    secondaryContainer = Color(0xffefa48b),
+    secondaryContainer = Color(0xFFE5DAE5),
     onSecondaryContainer = Color(0xfff0f0f0),
     surface = Color(0xFFC6D8AF),
     surfaceContainer = Color(0xFFE9EFE8),
-    onSurface = Color(0xFF5F391C)
+    onSurface = Color(0xFF5F391C),
+    tertiary = Color(0xFFEFA48B)
 )
 
 @Composable
@@ -86,7 +87,7 @@ fun CryptTheme(
     }
 
     MaterialTheme(
-        colorScheme = savanna,
+        colorScheme = colorScheme,
         typography = Typography,
         content = content
     )

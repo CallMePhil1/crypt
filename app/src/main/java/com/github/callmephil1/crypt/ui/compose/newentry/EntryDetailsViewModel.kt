@@ -1,6 +1,5 @@
 package com.github.callmephil1.crypt.ui.compose.newentry
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.callmephil1.crypt.data.EntryDetailsManager
@@ -94,6 +93,7 @@ class EntryDetailsViewModel(
             entryDetailsManager.label = _uiState.value.label
             entryDetailsManager.secret = _uiState.value.secretText
             entryDetailsManager.saveEntry()
+            entryDetailsManager.clearEntry()
             _uiState.update { it.copy(navigateToEntries = true) }
         }
     }

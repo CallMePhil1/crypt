@@ -33,8 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.callmephil1.crypt.R
 import com.github.callmephil1.crypt.ui.compose.rememberPermission
-import com.github.callmephil1.crypt.ui.theme.Apricot
-import com.github.callmephil1.crypt.ui.theme.Tacao
 
 @Composable
 fun EntryLine(
