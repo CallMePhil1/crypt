@@ -4,6 +4,7 @@ import com.github.callmephil1.crypt.data.CryptDatabase
 import com.github.callmephil1.crypt.ui.compose.entries.EntriesScreenViewModel
 import com.github.callmephil1.crypt.ui.compose.newentry.EntryDetailsViewModel
 import com.github.callmephil1.crypt.data.clipboard.Clipboard
+import com.github.callmephil1.crypt.ui.compose.login.LoginViewModel
 import com.github.callmephil1.crypt.ui.compose.qrscan.QrScanViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
@@ -28,5 +29,6 @@ val viewModelModule = module {
             get()
         )
     }
+    viewModelOf(::LoginViewModel)
     viewModelOf(::QrScanViewModel)
 }

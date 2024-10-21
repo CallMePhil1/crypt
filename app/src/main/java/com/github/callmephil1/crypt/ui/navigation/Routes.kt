@@ -3,9 +3,14 @@ package com.github.callmephil1.crypt.ui.navigation
 import androidx.navigation.NavController
 
 object Routes {
+    const val AUTHENTICATE = "authenticate"
     const val ENTRIES = "entries"
     const val ENTRY_DETAIL = "entry_detail?is_new={id}"
     const val QR_SCANNER = "qr_scanner"
+}
+
+fun NavController.navigateToLogin() {
+    this.navigate(Routes.AUTHENTICATE)
 }
 
 fun NavController.navigateToEntries() {

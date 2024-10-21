@@ -32,6 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.callmephil1.crypt.R
+import com.github.callmephil1.crypt.ui.compose.PrimaryTextButton
 import com.github.callmephil1.crypt.ui.compose.rememberPermission
 
 @Composable
@@ -163,24 +164,30 @@ fun EntryDetailsScreen(
 
         val enabled = uiState.secretText.isNotBlank() && uiState.label.isNotBlank()
 
-        TextButton(
-            onClick = {
-                viewModel.onSavedClicked()
-            },
-            colors = ButtonDefaults.textButtonColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = contentColorFor(MaterialTheme.colorScheme.primaryContainer),
-                disabledContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
-            ),
+        PrimaryTextButton(
+            text = "Save",
             enabled = enabled,
-            modifier = Modifier.fillMaxWidth().height(60.dp)
-        ) {
-            Text(
-                text = "Save",
-                fontSize = 24.sp,
-                color = Color.White
-            )
-        }
+            onClick = viewModel::onSavedClicked
+        )
+
+//        TextButton(
+//            onClick = {
+//                viewModel.onSavedClicked()
+//            },
+//            colors = ButtonDefaults.textButtonColors(
+//                containerColor = MaterialTheme.colorScheme.primaryContainer,
+//                contentColor = contentColorFor(MaterialTheme.colorScheme.primaryContainer),
+//                disabledContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
+//            ),
+//            enabled = enabled,
+//            modifier = Modifier.fillMaxWidth().height(60.dp)
+//        ) {
+//            Text(
+//                text = "Save",
+//                fontSize = 24.sp,
+//                color = Color.White
+//            )
+//        }
     }
 }
 

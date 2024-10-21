@@ -5,7 +5,6 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -29,6 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.github.callmephil1.crypt.di.appModule
 import com.github.callmephil1.crypt.ui.compose.entries.EntriesScreen
+import com.github.callmephil1.crypt.ui.compose.login.LoginScreen
 import com.github.callmephil1.crypt.ui.compose.newentry.EntryDetailsScreen
 import com.github.callmephil1.crypt.ui.compose.qrscan.QrScanScreen
 import com.github.callmephil1.crypt.ui.navigation.Routes
@@ -36,10 +36,8 @@ import com.github.callmephil1.crypt.ui.navigation.navigateToEntries
 import com.github.callmephil1.crypt.ui.navigation.navigateToEntryDetail
 import com.github.callmephil1.crypt.ui.navigation.navigateToQRScanner
 import com.github.callmephil1.crypt.ui.snackbar.SnackbarManager
-import com.github.callmephil1.crypt.ui.theme.Apricot
 import com.github.callmephil1.crypt.ui.theme.CryptTheme
 import com.github.callmephil1.crypt.ui.toast.ToastManager
-import net.zetetic.database.sqlcipher.SQLiteDatabase
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
@@ -51,13 +49,13 @@ class MainActivity : ComponentActivity() {
 
         System.loadLibrary("sqlcipher")
 
-        val databaseFile = getDatabasePath(BuildConfig.DATABASE_FILE)
-        SQLiteDatabase.openOrCreateDatabase(
-            databaseFile,
-            "test",
-            null,
-            null
-        )
+//        val databaseFile = getDatabasePath(BuildConfig.DATABASE_FILE)
+//        SQLiteDatabase.openOrCreateDatabase(
+//            databaseFile,
+//            "test",
+//            null,
+//            null
+//        )
 
         enableEdgeToEdge()
         setContent {
@@ -89,16 +87,24 @@ class MainActivity : ComponentActivity() {
                         },
                         snackbarHost = { SnackbarHost(hostState = snackbarManager.snackbarHostState) },
                         modifier = Modifier.fillMaxSize()
+
                     ) { innerPadding ->
                         NavHost(
                             navController = navController,
-                            startDestination = Routes.ENTRIES,
+                            startDestination = Routes.AUTHENTICATE,
                             modifier = Modifier.padding(innerPadding).padding(12.dp)
                         ) {
+                            composable(Routes.AUTHENTICATE) {
+                                LoginScreen(
+                                    viewModel = koinViewModel(),
+                                    onNavToEntries = navController::navigateToEntries
+                                )
+                            }
+
                             composable(Routes.ENTRIES) {
                                 EntriesScreen(
                                     viewModel = koinViewModel(),
-                                    navigateToEntryDetails = navController::navigateToEntryDetail,
+                                    onNavToEntryDetails = navController::navigateToEntryDetail,
                                     modifier = Modifier.fillMaxSize()
                                 )
                             }

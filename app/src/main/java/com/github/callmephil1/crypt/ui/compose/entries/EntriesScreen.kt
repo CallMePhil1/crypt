@@ -35,7 +35,7 @@ import org.koin.core.qualifier.named
 fun EntriesScreen(
     modifier: Modifier = Modifier,
     viewModel: EntriesScreenViewModel,
-    navigateToEntryDetails: (Int) -> Unit
+    onNavToEntryDetails: (Int) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val scope = rememberCoroutineScope()
@@ -48,7 +48,7 @@ fun EntriesScreen(
             onEditButtonClicked = {
                 scope.launch {
                     viewModel.entryDetailsManager.loadEntry(it)
-                    navigateToEntryDetails(it)
+                    onNavToEntryDetails(it)
                 }
             },
             viewModel::onOtpClicked,
@@ -58,7 +58,7 @@ fun EntriesScreen(
         )
 
         FloatingActionButton(
-            onClick = { navigateToEntryDetails(0) },
+            onClick = { onNavToEntryDetails(0) },
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
             modifier = Modifier
@@ -87,7 +87,7 @@ private fun ListScreenPreview() {
                 SnackbarManagerImpl(),
                 ToastManagerImpl()
             ),
-            navigateToEntryDetails = {}
+            onNavToEntryDetails = {}
         )
     }
 }
