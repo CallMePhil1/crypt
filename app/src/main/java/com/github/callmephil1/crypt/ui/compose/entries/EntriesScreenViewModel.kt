@@ -1,5 +1,6 @@
 package com.github.callmephil1.crypt.ui.compose.entries
 
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.callmephil1.crypt.data.CryptDatabase
@@ -26,7 +27,6 @@ class EntriesScreenViewModel(
     private val snackbarManager: SnackbarManager,
     private val toastManager: ToastManager
 ) : ViewModel() {
-
     private val _uiState = MutableStateFlow(EntriesScreenUiState())
     val uiState = _uiState.asStateFlow()
 

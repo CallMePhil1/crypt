@@ -3,6 +3,7 @@ package com.github.callmephil1.crypt.ui.compose.newentry
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.callmephil1.crypt.data.EntryDetailsManager
+import com.github.callmephil1.crypt.data.PasswordGenerator
 import com.github.callmephil1.crypt.data.TOTP
 import com.github.callmephil1.crypt.data.clipboard.Clipboard
 import com.github.callmephil1.crypt.ui.toast.ToastManager
@@ -11,13 +12,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.random.Random
-
-enum class DialogState {
-    NONE,
-    OPEN,
-    CONFIRMED
-}
 
 data class EntryDetailsUiState(
     val id: Int = 0,
@@ -25,15 +19,13 @@ data class EntryDetailsUiState(
     val navigateToEntries: Boolean = false,
     val otpText: String = "",
     val otpRefreshCountDown: Double = 0.0,
-    val secretText: String = "",
-    val showChangeSecretDialog: DialogState = DialogState.NONE,
-    val showChangeQRCodeDialog: DialogState = DialogState.NONE,
-    val showCamera: Boolean = false
+    val secretText: String = ""
 )
 
 class EntryDetailsViewModel(
     private val clipboard: Clipboard,
     private val entryDetailsManager: EntryDetailsManager,
+    private val passwordGenerator: PasswordGenerator,
     private val toastManager: ToastManager
 ) : ViewModel() {
 
@@ -64,10 +56,11 @@ class EntryDetailsViewModel(
 
     fun generateRandomSecret() {
         _uiState.update {
-            it.copy(secretText = (0..30)
-                .map { validCharacters[Random.nextInt(validCharacters.size)] }
-                .joinToString("")
-            )
+            it.copy(secretText = passwordGenerator.generate(16))
+//            it.copy(secretText = (0..30)
+//                .map { validCharacters[Random.nextInt(validCharacters.size)] }
+//                .joinToString("")
+//            )
         }
     }
 
@@ -79,7 +72,7 @@ class EntryDetailsViewModel(
         _uiState.update { it.copy(label = value) }
     }
 
-    fun onOtpCodeClicked() {
+    fun onOtpCodeClick() {
         if (uiState.value.otpText.isNotBlank()) {
             viewModelScope.launch {
                 clipboard.setString("OTP", uiState.value.secretText)
@@ -88,7 +81,7 @@ class EntryDetailsViewModel(
         }
     }
 
-    fun onSavedClicked() {
+    fun onSavedClick() {
         viewModelScope.launch {
             entryDetailsManager.label = _uiState.value.label
             entryDetailsManager.secret = _uiState.value.secretText
@@ -98,13 +91,17 @@ class EntryDetailsViewModel(
         }
     }
 
-    fun onSecretClicked() {
+    fun onSecretClick() {
         if (uiState.value.secretText.isNotBlank()) {
             viewModelScope.launch {
                 clipboard.setString("Secret", uiState.value.secretText)
                 toastManager.show("Copied secret")
             }
         }
+    }
+
+    fun onSecretValueChanged(value: String) {
+        _uiState.update { it.copy(secretText = value) }
     }
 
     fun updateState() {

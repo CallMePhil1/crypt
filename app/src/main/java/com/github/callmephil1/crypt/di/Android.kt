@@ -18,7 +18,6 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-
 val androidServices = module {
 
     single<Clipboard>(named("impl")) {

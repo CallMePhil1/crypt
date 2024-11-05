@@ -2,6 +2,8 @@ package com.github.callmephil1.crypt.ui.compose.login
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -29,7 +31,7 @@ fun LoginScreen(
         }
     }
 
-    CryptScaffold { innerPadding ->
+    CryptScaffold(showOptions = false) { innerPadding ->
         Box(
             modifier = Modifier.fillMaxSize().padding(innerPadding).padding(16.dp)
         ) {
@@ -44,7 +46,7 @@ fun LoginScreen(
 
             PrimaryTextButton(
                 text = "Authenticate",
-                modifier = Modifier.align(Alignment.BottomCenter),
+                modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth().height(60.dp),
                 onClick = viewModel::authenticate
             )
         }

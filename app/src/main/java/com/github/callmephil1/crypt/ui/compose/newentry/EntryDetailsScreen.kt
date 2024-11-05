@@ -3,13 +3,15 @@ package com.github.callmephil1.crypt.ui.compose.newentry
 import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
@@ -20,8 +22,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.painterResource
@@ -31,40 +34,29 @@ import com.github.callmephil1.crypt.ui.compose.CryptScaffold
 import com.github.callmephil1.crypt.ui.compose.PrimaryTextButton
 import com.github.callmephil1.crypt.ui.compose.rememberPermission
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun EntryLine(
+fun CryptTextField(
     text: String,
+    onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    placeHolder: String = "",
-    leadingIcon: (@Composable () -> Unit)? = null,
-    trailingIcon: (@Composable () -> Unit)? = null,
-    onClicked: () -> Unit = {},
-    onValueChanged: (String) -> Unit = {}
+    placeHolder: String,
+    trailingIcon: @Composable (() -> Unit)?,
+    onClick: () -> Unit
 ) {
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier.fillMaxWidth()
+    var editable by remember { mutableStateOf(false) }
+
+    Box(
+        modifier = modifier.combinedClickable(onLongClick = { editable = true }, onClick = onClick)
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(true, onClick = onClicked)
-        ) {
-            TextField(
-                value = text,
-                onValueChange = onValueChanged,
-                readOnly = true,
-                singleLine = true,
-                enabled = false,
-                leadingIcon = leadingIcon,
-                trailingIcon = trailingIcon,
-                placeholder = {
-                    Text(placeHolder)
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
-        }
+        TextField(
+            value = text,
+            onValueChange = onValueChange,
+            enabled = editable,
+            placeholder = { Text(text = placeHolder) },
+            trailingIcon = trailingIcon,
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
 
@@ -112,8 +104,9 @@ fun EntryDetailsScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                EntryLine(
+                CryptTextField(
                     text = uiState.secretText,
+                    onValueChange = viewModel::onSecretValueChanged,
                     placeHolder = "Secret",
                     trailingIcon = {
                         Icon(
@@ -122,9 +115,8 @@ fun EntryDetailsScreen(
                             modifier = Modifier.clickable { viewModel.generateRandomSecret() }
                         )
                     },
-                    onClicked = {
-                        viewModel.onSecretClicked()
-                    }
+                    onClick = viewModel::onSecretClick,
+                    modifier = Modifier.fillMaxWidth()
                 )
 
                 val leadingIcon: (@Composable () -> Unit)? = if (uiState.otpText.isBlank()) null else {
@@ -138,24 +130,36 @@ fun EntryDetailsScreen(
                     }
                 }
 
-                EntryLine(
-                    text = uiState.otpText,
-                    placeHolder = "OTP",
-                    leadingIcon = leadingIcon,
-                    trailingIcon = {
-                        Icon(
-                            painterResource(R.drawable.outline_qr_code_2_add_24),
-                            "",
-                            modifier = Modifier.clickable {
-                                if (!cameraPermission)
-                                    launcher.launch(Manifest.permission.CAMERA)
-                                else
-                                    onQrCodeButtonClicked()
-                            }
-                        )
-                    },
-                    onClicked = viewModel::onOtpCodeClicked
-                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable(true, onClick = viewModel::onOtpCodeClick)
+                ) {
+                    TextField(
+                        value = uiState.otpText,
+                        onValueChange = {},
+                        readOnly = true,
+                        singleLine = true,
+                        enabled = false,
+                        leadingIcon = leadingIcon,
+                        trailingIcon = {
+                            Icon(
+                                painterResource(R.drawable.outline_qr_code_2_add_24),
+                                "",
+                                modifier = Modifier.clickable {
+                                    if (!cameraPermission)
+                                        launcher.launch(Manifest.permission.CAMERA)
+                                    else
+                                        onQrCodeButtonClicked()
+                                }
+                            )
+                        },
+                        placeholder = {
+                            Text("OTP")
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
 
             val enabled = uiState.secretText.isNotBlank() && uiState.label.isNotBlank()
@@ -163,7 +167,8 @@ fun EntryDetailsScreen(
             PrimaryTextButton(
                 text = "Save",
                 enabled = enabled,
-                onClick = viewModel::onSavedClicked
+                onClick = viewModel::onSavedClick,
+                modifier = Modifier.fillMaxWidth().height(60.dp)
             )
         }
     }

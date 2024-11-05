@@ -1,5 +1,6 @@
 package com.github.callmephil1.crypt.ui.compose
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -8,10 +9,11 @@ import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun PrimaryTextButton(
+fun SecondaryTextButton(
     text: String,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
@@ -20,11 +22,11 @@ fun PrimaryTextButton(
 ) {
     TextButton(
         onClick = onClick,
+        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primaryContainer),
         colors = ButtonDefaults.textButtonColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = contentColorFor(MaterialTheme.colorScheme.primaryContainer),
-            disabledContainerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
-        ),
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            contentColor = contentColorFor(MaterialTheme.colorScheme.secondaryContainer),
+       ),
         enabled = enabled,
         modifier = modifier
     ) {
