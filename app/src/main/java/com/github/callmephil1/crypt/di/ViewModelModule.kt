@@ -2,7 +2,7 @@ package com.github.callmephil1.crypt.di
 
 import com.github.callmephil1.crypt.data.CryptDatabase
 import com.github.callmephil1.crypt.data.clipboard.Clipboard
-import com.github.callmephil1.crypt.ui.compose.changepassword.ChangePasswordViewModel
+import com.github.callmephil1.crypt.ui.compose.dialog.changepassword.ChangePasswordViewModel
 import com.github.callmephil1.crypt.ui.compose.entries.EntriesScreenViewModel
 import com.github.callmephil1.crypt.ui.compose.newentry.EntryDetailsViewModel
 import com.github.callmephil1.crypt.ui.compose.login.LoginViewModel

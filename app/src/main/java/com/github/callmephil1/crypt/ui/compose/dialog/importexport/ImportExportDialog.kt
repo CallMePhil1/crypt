@@ -1,4 +1,4 @@
-package com.github.callmephil1.crypt.ui.compose.changepassword
+package com.github.callmephil1.crypt.ui.compose.dialog.importexport
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,60 +12,56 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.github.callmephil1.crypt.ui.compose.PrimaryTextButton
 import com.github.callmephil1.crypt.ui.compose.SecondaryTextButton
+import com.github.callmephil1.crypt.ui.compose.dialog.changepassword.ChangePasswordViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun ChangePasswordDialog(
+fun ImportExportDialog(
+    isImport: Boolean,
     onDismissRequest: () -> Unit
 ) {
     val viewModel: ChangePasswordViewModel = koinViewModel()
-    var confirmPasswordText: String by remember { mutableStateOf("") }
-    var newPasswordText: String by remember { mutableStateOf("") }
-    var oldPasswordText: String by remember { mutableStateOf("") }
+    val buttonText = remember { if (isImport) "Import" else "Export" }
+    val title = remember { if (isImport) "Import Secrets" else "Export Secrets" }
+    var fileName by rememberSaveable { mutableStateOf("") }
+    var encryptKey by rememberSaveable { mutableStateOf("") }
 
-    val submitEnabled = oldPasswordText.isNotBlank() && newPasswordText.isNotBlank() && confirmPasswordText == newPasswordText
-
-    Dialog(
-        onDismissRequest = onDismissRequest
-    ) {
+    Dialog(onDismissRequest = onDismissRequest) {
         Card {
             Column(
                 verticalArrangement = Arrangement.spacedBy(32.dp),
                 modifier = Modifier.padding(16.dp)
             ) {
+                Text(text = title)
 
-                Text("Change password", fontSize = 24.sp)
                 TextField(
-                    oldPasswordText,
-                    onValueChange = { oldPasswordText = it },
-                    placeholder = { Text("Old password") }
+                    value = fileName,
+                    onValueChange = { fileName = it },
+                    placeholder = { Text("File name") }
                 )
+
                 TextField(
-                    newPasswordText,
-                    onValueChange = { newPasswordText = it },
-                    placeholder = { Text("New password") }
+                    value = encryptKey,
+                    onValueChange = { encryptKey = it },
+                    placeholder = { Text("Encryption Key") }
                 )
-                TextField(
-                    confirmPasswordText,
-                    onValueChange = { confirmPasswordText = it },
-                    placeholder = { Text("Confirm password") }
-                )
+
                 Row(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     SecondaryTextButton("Dismiss") { onDismissRequest() }
                     PrimaryTextButton(
-                        text = "Change",
-                        enabled = submitEnabled,
-                        onClick = { viewModel.changePassword(oldPasswordText, newPasswordText) }
+                        text = buttonText,
+                        enabled = fileName.isNotBlank(),
+                        onClick = {  }
                     )
                 }
             }

@@ -2,13 +2,10 @@ package com.github.callmephil1.crypt.ui.compose
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -23,7 +20,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import com.github.callmephil1.crypt.ui.compose.changepassword.ChangePasswordDialog
+import com.github.callmephil1.crypt.ui.compose.dialog.dialoghost.DialogController
+import com.github.callmephil1.crypt.ui.compose.dialog.dialoghost.Dialogs
 import com.github.callmephil1.crypt.ui.snackbar.SnackbarManager
 import com.github.callmephil1.crypt.ui.theme.CryptTheme
 import org.koin.compose.koinInject
@@ -36,8 +34,8 @@ fun CryptScaffold(
     dropDownMenu: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
+    val dialogController = koinInject<DialogController>()
     val navController = rememberNavController()
-    var showChangePasswordDialog by remember { mutableStateOf(false) }
     var showOptionsMenu by remember { mutableStateOf(false) }
     val snackbarManager = koinInject<SnackbarManager>()
 
@@ -58,7 +56,7 @@ fun CryptScaffold(
                             CryptOptionsMenu(
                                 showOptionsMenu = showOptionsMenu,
                                 onDismissRequest = { showOptionsMenu = false },
-                                onChangePasswordClicked = { showChangePasswordDialog = true }
+                                onChangePasswordClicked = { dialogController.show(Dialogs.CHANGE_PASSWORD) }
                             ) { }
                         }
                     }
@@ -66,16 +64,7 @@ fun CryptScaffold(
             },
             snackbarHost = { SnackbarHost(hostState = snackbarManager.snackbarHostState) },
             modifier = Modifier.fillMaxSize(),
-            content = {
-                when {
-                    showChangePasswordDialog -> {
-                        ChangePasswordDialog(
-                            onDismissRequest = { showChangePasswordDialog = false }
-                        )
-                    }
-                }
-                content(it)
-            }
+            content = content
         )
     }
 }

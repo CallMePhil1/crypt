@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.github.callmephil1.crypt.di.appModule
+import com.github.callmephil1.crypt.ui.compose.dialog.dialoghost.DialogHost
 import com.github.callmephil1.crypt.ui.compose.entries.EntriesScreen
 import com.github.callmephil1.crypt.ui.compose.login.LoginScreen
 import com.github.callmephil1.crypt.ui.compose.newentry.EntryDetailsScreen
@@ -45,6 +46,8 @@ class MainActivity : ComponentActivity() {
                     if (toastMessage.message.isNotBlank())
                         Toast.makeText(context, toastMessage.message, Toast.LENGTH_SHORT).show()
                 }
+
+                DialogHost()
 
                 NavHost(
                     navController = navController,

@@ -1,4 +1,4 @@
-package com.github.callmephil1.crypt.ui.compose.changepassword
+package com.github.callmephil1.crypt.ui.compose.dialog.changepassword
 
 import androidx.lifecycle.ViewModel
 import com.github.callmephil1.crypt.data.CryptDatabase
@@ -13,5 +13,6 @@ class ChangePasswordViewModel(
 
         val database = cryptDatabase.openHelper.writableDatabase as (SQLiteDatabase)
         database.changePassword(newPassword)
+
     }
 }
