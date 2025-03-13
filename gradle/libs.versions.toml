@@ -37,15 +37,18 @@ androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+google-api-client-android = { group = "com.google.api-client", name = "google-api-client-android", version = "2.7.0" }
+google-api-service-drive = { group = "com.google.apis", name = "google-api-services-drive", version = "v3-rev20241027-2.0.0" }
+google-mlkit-barcode = { group = "com.google.mlkit", name = "barcode-scanning", version = "17.3.0" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json" }
 sqlcipher-android = { group = "net.zetetic", name = "sqlcipher-android", version = "4.6.1" }
-google-mlkit-barcode = { group = "com.google.mlkit", name = "barcode-scanning", version = "17.3.0" }
-
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 google-ksp = { id = "com.google.devtools.ksp", version = "2.0.0-1.0.24" }

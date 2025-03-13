@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.update
 
 enum class Dialogs {
     CHANGE_PASSWORD,
+    EXPORT,
+    IMPORT,
     NONE
 }
 

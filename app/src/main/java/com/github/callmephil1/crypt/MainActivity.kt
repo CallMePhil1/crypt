@@ -13,7 +13,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.github.callmephil1.crypt.di.appModule
 import com.github.callmephil1.crypt.ui.compose.dialog.dialoghost.DialogHost
 import com.github.callmephil1.crypt.ui.compose.entries.EntriesScreen
 import com.github.callmephil1.crypt.ui.compose.login.LoginScreen
@@ -24,8 +23,8 @@ import com.github.callmephil1.crypt.ui.navigation.navigateToEntries
 import com.github.callmephil1.crypt.ui.navigation.navigateToEntryDetail
 import com.github.callmephil1.crypt.ui.navigation.navigateToQRScanner
 import com.github.callmephil1.crypt.ui.toast.ToastManager
+import org.koin.androidx.compose.KoinAndroidContext
 import org.koin.androidx.compose.koinViewModel
-import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
 
 class MainActivity : ComponentActivity() {
@@ -36,7 +35,7 @@ class MainActivity : ComponentActivity() {
         System.loadLibrary("sqlcipher")
 
         setContent {
-            KoinApplication(appModule(this@MainActivity.applicationContext)) {
+            KoinAndroidContext {
                 val context = LocalContext.current
                 val navController = rememberNavController()
                 val toastManager = koinInject<ToastManager>()

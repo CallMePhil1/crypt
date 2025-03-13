@@ -31,7 +31,6 @@ import org.koin.compose.koinInject
 fun CryptScaffold(
     showOptions: Boolean = true,
     navigationIcon: @Composable () -> Unit = {},
-    dropDownMenu: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
     val dialogController = koinInject<DialogController>()
@@ -56,8 +55,10 @@ fun CryptScaffold(
                             CryptOptionsMenu(
                                 showOptionsMenu = showOptionsMenu,
                                 onDismissRequest = { showOptionsMenu = false },
-                                onChangePasswordClicked = { dialogController.show(Dialogs.CHANGE_PASSWORD) }
-                            ) { }
+                                onChangePasswordClicked = { dialogController.show(Dialogs.CHANGE_PASSWORD) },
+                                onImportClicked = { dialogController.show(Dialogs.IMPORT) },
+                                onExportClicked = { dialogController.show(Dialogs.EXPORT) }
+                            )
                         }
                     }
                 )

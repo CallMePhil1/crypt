@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -41,6 +42,9 @@ android {
         compose = true
         android.buildFeatures.buildConfig = true
     }
+    packaging {
+        resources.excludes.add("META-INF/*")
+    }
 }
 
 dependencies {
@@ -62,9 +66,12 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.sqlite)
+    implementation(libs.google.api.client.android)
+    implementation(libs.google.api.service.drive)
     implementation(libs.google.mlkit.barcode)
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.sqlcipher.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
