@@ -29,13 +29,14 @@ import com.github.callmephil1.crypt.ui.compose.EntryList
 import com.github.callmephil1.crypt.ui.snackbar.SnackbarManagerImpl
 import com.github.callmephil1.crypt.ui.toast.ToastManagerImpl
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.KoinApplication
 import org.koin.compose.getKoin
 import org.koin.core.qualifier.named
 
 @Composable
 fun EntriesScreen(
-    viewModel: EntriesScreenViewModel,
+    viewModel: EntriesScreenViewModel = koinViewModel(),
     onNavToEntryDetails: (Int) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()

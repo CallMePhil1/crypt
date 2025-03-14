@@ -34,6 +34,7 @@ val viewModelModule = module {
             get<Clipboard>(named("impl")),
             get(),
             get(),
+            get(),
             get()
         )
     }

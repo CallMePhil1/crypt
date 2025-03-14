@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -17,19 +16,13 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.github.callmephil1.crypt.ui.compose.CryptScaffold
 import com.github.callmephil1.crypt.ui.compose.PrimaryTextButton
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel,
-    onNavToEntries: () -> Unit
+    viewModel: LoginViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
-
-    LaunchedEffect(uiState.navigateToEntries) {
-        if (uiState.navigateToEntries) {
-            onNavToEntries()
-        }
-    }
 
     CryptScaffold(showOptions = false) { innerPadding ->
         Box(

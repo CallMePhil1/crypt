@@ -1,6 +1,5 @@
 package com.github.callmephil1.crypt.ui.compose.qrscan
 
-import android.net.Uri
 import androidx.annotation.OptIn
 import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageProxy
@@ -11,6 +10,7 @@ import com.google.mlkit.vision.common.InputImage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import androidx.core.net.toUri
 
 data class QrScanUiState(
     val showCamera: Boolean = true
@@ -38,9 +38,9 @@ class QrScanViewModel(
                 if (it.isNotEmpty()) {
                     val barcode = it[0]
                     if (barcode.rawValue?.startsWith("otpauth") == true) {
-                        val uri = Uri.parse(barcode.rawValue)
+                        val uri = barcode.rawValue?.toUri()
 
-                        when(val qrCodeSecret = uri.getQueryParameter("secret")) {
+                        when(val qrCodeSecret = uri?.getQueryParameter("secret")) {
                             null -> return@addOnSuccessListener
                             else -> {
                                 entryDetailsManager.apply {

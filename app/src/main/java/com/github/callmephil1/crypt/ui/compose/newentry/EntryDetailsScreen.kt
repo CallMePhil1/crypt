@@ -32,7 +32,9 @@ import androidx.compose.ui.unit.dp
 import com.github.callmephil1.crypt.R
 import com.github.callmephil1.crypt.ui.compose.CryptScaffold
 import com.github.callmephil1.crypt.ui.compose.PrimaryTextButton
+import com.github.callmephil1.crypt.ui.compose.SecondaryTextButton
 import com.github.callmephil1.crypt.ui.compose.rememberPermission
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -62,8 +64,8 @@ fun CryptTextField(
 
 @Composable
 fun EntryDetailsScreen(
-    viewModel: EntryDetailsViewModel,
-    onNavToEntries: () -> Unit,
+    viewModel: EntryDetailsViewModel = koinViewModel(),
+    onDismiss: () -> Unit,
     onQrCodeButtonClicked: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -81,16 +83,13 @@ fun EntryDetailsScreen(
         viewModel.updateState()
     }
 
-    LaunchedEffect(uiState.navigateToEntries) {
-        if (uiState.navigateToEntries) {
-            onNavToEntries()
-        }
-    }
-
     CryptScaffold { innerPadding ->
         Column(
             verticalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxSize().padding(innerPadding).padding(16.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp)
         ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -98,6 +97,7 @@ fun EntryDetailsScreen(
                 TextField(
                     value = uiState.label,
                     onValueChange = viewModel::onNameTextChanged,
+                    singleLine = true,
                     placeholder = {
                         Text("Name")
                     },
@@ -147,10 +147,7 @@ fun EntryDetailsScreen(
                                 painterResource(R.drawable.outline_qr_code_2_add_24),
                                 "",
                                 modifier = Modifier.clickable {
-                                    if (!cameraPermission)
-                                        launcher.launch(Manifest.permission.CAMERA)
-                                    else
-                                        onQrCodeButtonClicked()
+                                    onQrCodeButtonClicked()
                                 }
                             )
                         },
@@ -164,12 +161,22 @@ fun EntryDetailsScreen(
 
             val enabled = uiState.secretText.isNotBlank() && uiState.label.isNotBlank()
 
-            PrimaryTextButton(
-                text = "Save",
-                enabled = enabled,
-                onClick = viewModel::onSavedClick,
-                modifier = Modifier.fillMaxWidth().height(60.dp)
-            )
+            Column(
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                PrimaryTextButton(
+                    text = "Save",
+                    enabled = enabled,
+                    onClick = viewModel::onSavedClick,
+                    modifier = Modifier.fillMaxWidth().height(60.dp)
+                )
+
+                SecondaryTextButton(
+                    text = "Dismiss",
+                    onClick = onDismiss,
+                    modifier = Modifier.fillMaxWidth().height(60.dp)
+                )
+            }
         }
     }
 }

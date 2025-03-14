@@ -13,6 +13,8 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.github.callmephil1.crypt.ui.compose.dialog.dialoghost.DialogController
 import com.github.callmephil1.crypt.ui.compose.dialog.dialoghost.Dialogs
+import com.github.callmephil1.crypt.ui.navigation.NavigationHelper
 import com.github.callmephil1.crypt.ui.snackbar.SnackbarManager
 import com.github.callmephil1.crypt.ui.theme.CryptTheme
 import org.koin.compose.koinInject
@@ -37,6 +40,8 @@ fun CryptScaffold(
     val navController = rememberNavController()
     var showOptionsMenu by remember { mutableStateOf(false) }
     val snackbarManager = koinInject<SnackbarManager>()
+
+
 
     CryptTheme {
         Scaffold(

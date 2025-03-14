@@ -8,23 +8,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import androidx.navigation.toRoute
 import com.github.callmephil1.crypt.ui.compose.dialog.dialoghost.DialogHost
 import com.github.callmephil1.crypt.ui.compose.entries.EntriesScreen
 import com.github.callmephil1.crypt.ui.compose.login.LoginScreen
 import com.github.callmephil1.crypt.ui.compose.newentry.EntryDetailsScreen
 import com.github.callmephil1.crypt.ui.compose.qrscan.QrScanScreen
-import com.github.callmephil1.crypt.ui.navigation.Routes
-import com.github.callmephil1.crypt.ui.navigation.navigateToEntries
-import com.github.callmephil1.crypt.ui.navigation.navigateToEntryDetail
-import com.github.callmephil1.crypt.ui.navigation.navigateToQRScanner
+import com.github.callmephil1.crypt.ui.navigation.Destination
+import com.github.callmephil1.crypt.ui.navigation.NavigationHelper
 import com.github.callmephil1.crypt.ui.toast.ToastManager
 import org.koin.androidx.compose.KoinAndroidContext
-import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 
 class MainActivity : ComponentActivity() {
@@ -38,6 +34,8 @@ class MainActivity : ComponentActivity() {
             KoinAndroidContext {
                 val context = LocalContext.current
                 val navController = rememberNavController()
+                val navigationHelper = koinInject<NavigationHelper>()
+                val navigationState by navigationHelper.navigationFlow.collectAsState()
                 val toastManager = koinInject<ToastManager>()
                 val toastMessage by toastManager.messages.collectAsState()
 
@@ -46,43 +44,39 @@ class MainActivity : ComponentActivity() {
                         Toast.makeText(context, toastMessage.message, Toast.LENGTH_SHORT).show()
                 }
 
+                LaunchedEffect(navigationState) {
+                    if (navigationState == null) {
+                        return@LaunchedEffect
+                    }
+                    navController.navigate(navigationState!!)
+                }
+
                 DialogHost()
 
                 NavHost(
                     navController = navController,
-                    startDestination = Routes.AUTHENTICATE
+                    startDestination = Destination.Authentication
                 ) {
-                    composable(Routes.AUTHENTICATE) {
-                        LoginScreen(
-                            viewModel = koinViewModel(),
-                            onNavToEntries = navController::navigateToEntries
-                        )
+                    composable<Destination.Authentication> {
+                        LoginScreen()
                     }
 
-                    composable(Routes.ENTRIES) {
+                    composable<Destination.Entries> {
                         EntriesScreen(
-                            viewModel = koinViewModel(),
-                            onNavToEntryDetails = navController::navigateToEntryDetail,
+                            onNavToEntryDetails = { navigationHelper.navigate(Destination.EntryDetails(it)) },
                         )
                     }
 
-                    composable(
-                        Routes.ENTRY_DETAIL,
-                        listOf(navArgument("id") {
-                            this.type = NavType.IntType
-                            this.defaultValue = 0
-                        })
-                    ) {
+                    composable<Destination.EntryDetails> { backStackEntry ->
+                        val details = backStackEntry.toRoute<Destination.EntryDetails>()
                         EntryDetailsScreen(
-                            viewModel = koinViewModel(),
-                            onNavToEntries = { navController.navigateToEntries() },
-                            onQrCodeButtonClicked = { navController.navigateToQRScanner() },
+                            onDismiss = { navController.popBackStack() },
+                            onQrCodeButtonClicked = { navigationHelper.navigate(Destination.QrScanner) },
                         )
                     }
 
-                    composable(Routes.QR_SCANNER) {
+                    composable<Destination.QrScanner> {
                         QrScanScreen(
-                            viewModel = koinViewModel(),
                             onDismissClicked = { navController.popBackStack() },
                             onNavToNewEntry = { navController.popBackStack() }
                         )

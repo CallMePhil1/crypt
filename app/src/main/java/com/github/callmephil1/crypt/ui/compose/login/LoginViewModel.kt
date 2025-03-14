@@ -3,6 +3,8 @@ package com.github.callmephil1.crypt.ui.compose.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.callmephil1.crypt.data.DatabaseManager
+import com.github.callmephil1.crypt.ui.navigation.Destination
+import com.github.callmephil1.crypt.ui.navigation.NavigationHelper
 import com.github.callmephil1.crypt.ui.snackbar.SnackbarManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,6 +18,7 @@ data class LoginUiState(
 
 class LoginViewModel(
     private val databaseManager: DatabaseManager,
+    private val navigationHelper: NavigationHelper,
     private val snackbarManager: SnackbarManager
 ) : ViewModel() {
 
@@ -27,9 +30,10 @@ class LoginViewModel(
 
         when {
             result.isSuccess -> {
-                _uiState.update {
-                    it.copy(navigateToEntries = true)
-                }
+                 navigationHelper.navigate(Destination.Entries)
+//                _uiState.update {
+//                    it.copy(navigateToEntries = true)
+//                }
             }
             result.isFailure -> {
                 viewModelScope.launch {

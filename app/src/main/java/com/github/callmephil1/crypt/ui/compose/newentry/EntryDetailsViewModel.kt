@@ -6,6 +6,8 @@ import com.github.callmephil1.crypt.data.EntryDetailsManager
 import com.github.callmephil1.crypt.data.PasswordGenerator
 import com.github.callmephil1.crypt.data.TOTP
 import com.github.callmephil1.crypt.data.clipboard.Clipboard
+import com.github.callmephil1.crypt.ui.navigation.Destination
+import com.github.callmephil1.crypt.ui.navigation.NavigationHelper
 import com.github.callmephil1.crypt.ui.toast.ToastManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +18,6 @@ import kotlinx.coroutines.launch
 data class EntryDetailsUiState(
     val id: Int = 0,
     val label: String = "",
-    val navigateToEntries: Boolean = false,
     val otpText: String = "",
     val otpRefreshCountDown: Double = 0.0,
     val secretText: String = ""
@@ -25,6 +26,7 @@ data class EntryDetailsUiState(
 class EntryDetailsViewModel(
     private val clipboard: Clipboard,
     private val entryDetailsManager: EntryDetailsManager,
+    private val navigationHelper: NavigationHelper,
     private val passwordGenerator: PasswordGenerator,
     private val toastManager: ToastManager
 ) : ViewModel() {
@@ -87,7 +89,8 @@ class EntryDetailsViewModel(
             entryDetailsManager.secret = _uiState.value.secretText
             entryDetailsManager.saveEntry()
             entryDetailsManager.clearEntry()
-            _uiState.update { it.copy(navigateToEntries = true) }
+
+            navigationHelper.navigate(Destination.Entries)
         }
     }
 

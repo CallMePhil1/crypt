@@ -6,6 +6,8 @@ import androidx.camera.core.ImageAnalysis
 import com.github.callmephil1.crypt.data.clipboard.AndroidClipboard
 import com.github.callmephil1.crypt.data.clipboard.Clipboard
 import com.github.callmephil1.crypt.data.clipboard.NoopClipboard
+import com.github.callmephil1.crypt.ui.navigation.NavigationHelper
+import com.github.callmephil1.crypt.ui.navigation.NavigationHelperImpl
 import com.github.callmephil1.crypt.ui.snackbar.SnackbarManager
 import com.github.callmephil1.crypt.ui.snackbar.SnackbarManagerImpl
 import com.github.callmephil1.crypt.ui.toast.ToastManager
@@ -41,6 +43,7 @@ val androidServices = module {
             .build()
     }
 
+    singleOf<NavigationHelper>(::NavigationHelperImpl)
     singleOf<SnackbarManager>(::SnackbarManagerImpl)
     singleOf<ToastManager>(::ToastManagerImpl)
 }

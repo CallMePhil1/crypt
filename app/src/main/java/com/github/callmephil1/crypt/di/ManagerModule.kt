@@ -8,7 +8,5 @@ import org.koin.dsl.module
 val managerModule = module {
     single { EntryDetailsManager(get(named("impl"))) }
 
-    single {
-        DatabaseManager(get())
-    }
+    single { DatabaseManager(get()) }
 }
